@@ -8,8 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = MtgSearchParser::VERSION
   spec.authors       = ["Donald Plummer"]
   spec.email         = ["donald.plummer@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{A ruby implementation of a MTG search string parser.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
