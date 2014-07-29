@@ -45,5 +45,15 @@ module MtgSearchParser
       expect(subject.lex('o:"foo bar" baz')).
         to eq([QueryNode.new('o:"foo bar"'), QueryNode.new("baz")])
     end
+
+    it "recognizes left and right parens" do
+      expect(subject.lex("(foo)")).
+        to eq([LeftParenNode.new, QueryNode.new("foo"), RightParenNode.new])
+    end
+
+    it "recognizes left and right parens ignoring spaces" do
+      expect(subject.lex(" ( foo ) ")).
+        to eq([LeftParenNode.new, QueryNode.new("foo"), RightParenNode.new])
+    end
   end
 end

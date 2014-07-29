@@ -5,7 +5,7 @@ module MtgSearchParser
     end
 
     def ==(o)
-      o.class = self.class
+      o.class == self.class
     end
   end
 
@@ -66,11 +66,16 @@ module MtgSearchParser
             current_letters = ""
           end
         when :term
-          if letter == '"'
+          case letter
+          when '"'
             current_letters << letter
             state = :quoted_term
-          elsif blank?(letter)
+          when /^\s*$/
             completed_tokens << QueryNode.new(current_letters)
+            state = :blank
+            current_letters = ""
+          when ')'
+            completed_tokens << QueryNode.new(current_letters) << RightParenNode.new
             state = :blank
             current_letters = ""
           else
