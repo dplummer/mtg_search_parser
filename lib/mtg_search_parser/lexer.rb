@@ -1,4 +1,35 @@
 module MtgSearchParser
+  class Node
+    def blank?
+      false
+    end
+
+    def ==(o)
+      o.class = self.class
+    end
+  end
+
+  class QueryNode < Node
+    attr_reader :contents
+
+    def initialize(contents)
+      @contents = contents
+    end
+
+    def blank?
+      contents =~ /^\s*$/
+    end
+
+    def ==(o)
+      o.class == QueryNode && o.contents == contents
+    end
+  end
+
+  AndNode        = Class.new(Node)
+  OrNode         = Class.new(Node)
+  LeftParenNode  = Class.new(Node)
+  RightParenNode = Class.new(Node)
+
   class Lexer
     def lex(string)
       state = :blank
@@ -9,13 +40,20 @@ module MtgSearchParser
         case state
         when :blank
           if !blank?(letter)
-            current_letters << letter
-            if letter == '"'
-              state = :quoted_term
-            elsif letter == '!'
-              state = :exact_name
+            case letter
+            when '('
+              completed_tokens << LeftParenNode.new
+            when ')'
+              completed_tokens << RightParenNode.new
             else
-              state = :term
+              current_letters << letter
+              if letter == '"'
+                state = :quoted_term
+              elsif letter == '!'
+                state = :exact_name
+              else
+                state = :term
+              end
             end
           end
         when :exact_name
@@ -23,7 +61,7 @@ module MtgSearchParser
         when :quoted_term
           current_letters << letter
           if letter == '"'
-            completed_tokens << current_letters
+            completed_tokens << QueryNode.new(current_letters)
             state = :blank
             current_letters = ""
           end
@@ -32,7 +70,7 @@ module MtgSearchParser
             current_letters << letter
             state = :quoted_term
           elsif blank?(letter)
-            completed_tokens << current_letters
+            completed_tokens << QueryNode.new(current_letters)
             state = :blank
             current_letters = ""
           else
@@ -41,9 +79,9 @@ module MtgSearchParser
         end
       end
 
-      completed_tokens << current_letters
+      completed_tokens << QueryNode.new(current_letters)
 
-      completed_tokens.reject {|t| blank?(t)}
+      completed_tokens.reject(&:blank?)
     end
 
     def blank?(letter)
