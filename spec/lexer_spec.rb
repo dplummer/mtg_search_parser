@@ -55,5 +55,35 @@ module MtgSearchParser
       expect(subject.lex(" ( foo ) ")).
         to eq([LeftParenNode.new, QueryNode.new("foo"), RightParenNode.new])
     end
+
+    it "parses AND as an AndNode" do
+      expect(subject.lex("foo AND bar")).
+        to eq([QueryNode.new("foo"), AndNode.new, QueryNode.new("bar")])
+    end
+
+    it "parses and as an AndNode" do
+      expect(subject.lex("foo and bar")).
+        to eq([QueryNode.new("foo"), AndNode.new, QueryNode.new("bar")])
+    end
+
+    it "parses OR as an OrNode" do
+      expect(subject.lex("foo OR bar")).
+        to eq([QueryNode.new("foo"), OrNode.new, QueryNode.new("bar")])
+    end
+
+    it "parses or as an OrNode" do
+      expect(subject.lex("foo or bar")).
+        to eq([QueryNode.new("foo"), OrNode.new, QueryNode.new("bar")])
+    end
+
+    it "parses NOT as an NotNode" do
+      expect(subject.lex("foo NOT bar")).
+        to eq([QueryNode.new("foo"), NotNode.new, QueryNode.new("bar")])
+    end
+
+    it "parses not as an NotNode" do
+      expect(subject.lex("foo not bar")).
+        to eq([QueryNode.new("foo"), NotNode.new, QueryNode.new("bar")])
+    end
   end
 end

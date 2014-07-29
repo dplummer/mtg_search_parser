@@ -27,6 +27,7 @@ module MtgSearchParser
 
   AndNode        = Class.new(Node)
   OrNode         = Class.new(Node)
+  NotNode        = Class.new(Node)
   LeftParenNode  = Class.new(Node)
   RightParenNode = Class.new(Node)
 
@@ -71,11 +72,11 @@ module MtgSearchParser
             current_letters << letter
             state = :quoted_term
           when /^\s*$/
-            completed_tokens << QueryNode.new(current_letters)
+            completed_tokens << complete_node(current_letters)
             state = :blank
             current_letters = ""
           when ')'
-            completed_tokens << QueryNode.new(current_letters) << RightParenNode.new
+            completed_tokens << complete_node(current_letters) << RightParenNode.new
             state = :blank
             current_letters = ""
           else
@@ -91,6 +92,19 @@ module MtgSearchParser
 
     def blank?(letter)
       letter =~ /^\s*$/
+    end
+
+    def complete_node(letters)
+      case letters.downcase
+      when 'and'
+        AndNode.new
+      when 'or'
+        OrNode.new
+      when 'not'
+        NotNode.new
+      else
+        QueryNode.new(letters)
+      end
     end
   end
 end
