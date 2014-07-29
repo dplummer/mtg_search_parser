@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Donald Plummer"]
   spec.email         = ["donald.plummer@gmail.com"]
   spec.summary       = %q{A ruby implementation of a MTG search string parser.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/dplummer/mtg_search_parser"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
