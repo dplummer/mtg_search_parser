@@ -21,5 +21,15 @@ describe MtgSearchParser do
           MtgSearchParser::Parsed::ReleaseYear.new("=", "1999"),
       ])
     end
+
+    it "groups items OR'd" do
+      expect(MtgSearchParser.parse("t:angel OR t:demon")).
+        to eq([
+          MtgSearchParser::OrGroup.new([
+            MtgSearchParser::Parsed::CardType.new("angel"),
+            MtgSearchParser::Parsed::CardType.new("demon"),
+          ])
+        ])
+    end
   end
 end

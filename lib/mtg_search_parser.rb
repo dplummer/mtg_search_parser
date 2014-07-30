@@ -29,6 +29,8 @@ require "mtg_search_parser/parsed/release_year"
 require "mtg_search_parser/parsed/language"
 require "mtg_search_parser/parsed/quality"
 
+require "mtg_search_parser/or_group"
+
 require "mtg_search_parser/parser"
 require "mtg_search_parser/lexer"
 
@@ -38,12 +40,23 @@ module MtgSearchParser
     parser = MtgSearchParser::Parser.new
 
     tokens = Lexer.new.lex(string)
-    tokens.map do |token|
-      if token.is_a?(MtgSearchParser::Nodes::Query)
-        parser.parse(token.contents)
+    parsed = []
+
+    while token = tokens.shift
+      case token
+      when MtgSearchParser::Nodes::Query
+        parsed << parser.parse(token.contents)
+      when MtgSearchParser::Nodes::Or
+        next_token = tokens.shift
+        if next_token
+          parsed << MtgSearchParser::OrGroup.new([parsed.pop,
+                                                  parser.parse(next_token.contents)])
+        end
       else
-        token
+        parsed << token
       end
     end
+
+    parsed
   end
 end
