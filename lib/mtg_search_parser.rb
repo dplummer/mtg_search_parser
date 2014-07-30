@@ -2,5 +2,12 @@ module MtgSearchParser
 end
 
 require "mtg_search_parser/version"
+require "mtg_search_parser/nodes/node"
+require "mtg_search_parser/nodes/and"
+require "mtg_search_parser/nodes/left_paren"
+require "mtg_search_parser/nodes/not"
+require "mtg_search_parser/nodes/or"
+require "mtg_search_parser/nodes/query"
+require "mtg_search_parser/nodes/right_paren"
 require "mtg_search_parser/lexer"
 
