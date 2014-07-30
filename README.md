@@ -75,7 +75,7 @@ Artist:
 
 Edition:
 
-* e:al/en (Uses the abbreviations that are listed on the sitemap)
+* e:al (Uses the abbreviations that are listed on the sitemap)
 * e:al,be (Cards that appear in Alpha or Beta)
 * e:al+be (Cards that appear in Alpha and Beta)
 * e:al,be -e:al+be (Cards that appear in Alpha or Beta but not in both editions)

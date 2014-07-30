@@ -3,31 +3,51 @@ module MtgSearchParser
     def parse(contents)
       case contents
 
-      ## Edition code
-      #when /\Ae:([a-z0-9,+]+)(\/[a-z]{1,2})?\z/i
-      #  scope = edition_query(scope, $1)
+      when /\Ac!([wubrgmlc]+)\z/i
+        MtgSearchParser::Parsed::ExactColor.new($1)
 
-      ## color
-      #when /c(!|:)([wubrgmlc]+)/i
-      #  comparitor = $1
-      #  values = $2.downcase
+      when /\Ac:([wubrgmlc]+)\z/i
+        MtgSearchParser::Parsed::AnyColor.new($1)
 
-      #  scope = color(scope, comparitor, values)
+      when /\Aci:([wubrgmlc]+)\z/i
+        MtgSearchParser::Parsed::ColorIdentity.new($1)
 
-      ## types
-      #when /\At:"([^"]+)"\z/i, /\At:(.+)\z/i
-      #  type = $1
-      #  scope = card_type_query(scope, type)
+      when /\At:"([^"]+)"\z/i, /\At:(.+)\z/i
+        MtgSearchParser::Parsed::CardType.new($1)
 
-      ## card text
-      #when /\Ao:"?([^"]+)"?\z/i
-      #  scope = text_query(scope, $1)
+      when /\Ao:"?([^"]+)"?\z/i
+        MtgSearchParser::Parsed::RulesText.new($1)
 
-      ## mana cost
-      #when /\Amana=(.+)\z/i
-      #  scope = exact_mana_cost_query(scope, $1)
+      when /\Amana(=|>=|<=|>|<)(.+)\z/i
+        MtgSearchParser::Parsed::ManaCost.new($1, $2)
 
-      # name
+      when /\A(pow|tou|cmc)(=|>=|<=|>|<)(pow|tou|cmc|\*|[0-9]+)\z/i
+        MtgSearchParser::Parsed::PowerToughCompare.new($1, $2, $3)
+
+      when /\Ar:(mythic|uncommon|common|rare|promo)\z/i
+        MtgSearchParser::Parsed::Rarity.new($1)
+
+      when /\Aa:"(.+)"\z/i, /\Aa:(.+)\z/i
+        MtgSearchParser::Parsed::Artist.new($1)
+
+      when /\Af:(standard|block|extended|vintage|classic|legacy|modern|commander)\z/i
+        MtgSearchParser::Parsed::Legal.new($1)
+
+      when /\Abanned:(standard|block|extended|vintage|classic|legacy|modern|commander)\z/i
+        MtgSearchParser::Parsed::Banned.new($1)
+
+      when /\Ae:(.+)\z/i
+        MtgSearchParser::Parsed::Edition.new($1)
+
+      when /\Al:(.+)\z/i
+        MtgSearchParser::Parsed::Language.new($1)
+
+      when /\Ayear(=|>=|<=|>|<)(.+)\z/i
+        MtgSearchParser::Parsed::ReleaseYear.new($1, $2)
+
+      when /\Ais:(.+)\z/i
+        MtgSearchParser::Parsed::Quality.new($1)
+
       when /\A!(.+)\z/
         MtgSearchParser::Parsed::ExactName.new($1)
       when /\A"([^"]+)"\z/
