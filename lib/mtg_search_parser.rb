@@ -29,6 +29,7 @@ require "mtg_search_parser/parsed/release_year"
 require "mtg_search_parser/parsed/language"
 require "mtg_search_parser/parsed/quality"
 
+require "mtg_search_parser/not_group"
 require "mtg_search_parser/or_group"
 
 require "mtg_search_parser/parser"
@@ -51,6 +52,11 @@ module MtgSearchParser
         if next_token
           parsed << MtgSearchParser::OrGroup.new([parsed.pop,
                                                   parser.parse(next_token.contents)])
+        end
+      when MtgSearchParser::Nodes::Not
+        next_token = tokens.shift
+        if next_token
+          parsed << MtgSearchParser::NotGroup.new(parser.parse(next_token.contents))
         end
       else
         parsed << token

@@ -85,5 +85,10 @@ module MtgSearchParser
       expect(subject.lex("foo not bar")).
         to eq([Nodes::Query.new("foo"), Nodes::Not.new, Nodes::Query.new("bar")])
     end
+
+    it "parses - as an NotNode" do
+      expect(subject.lex("foo -bar")).
+        to eq([Nodes::Query.new("foo"), Nodes::Not.new, Nodes::Query.new("bar")])
+    end
   end
 end

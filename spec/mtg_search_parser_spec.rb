@@ -31,5 +31,13 @@ describe MtgSearchParser do
           ])
         ])
     end
+
+    it "not" do
+      expect(MtgSearchParser.parse("NOT t:angel -t:demon")).
+        to eq([
+          MtgSearchParser::NotGroup.new(MtgSearchParser::Parsed::CardType.new("angel")),
+          MtgSearchParser::NotGroup.new(MtgSearchParser::Parsed::CardType.new("demon"))
+        ])
+    end
   end
 end

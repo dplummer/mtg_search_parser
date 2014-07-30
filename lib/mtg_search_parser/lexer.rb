@@ -14,6 +14,8 @@ module MtgSearchParser
               completed_tokens << Nodes::LeftParen.new
             when ')'
               completed_tokens << Nodes::RightParen.new
+            when '-'
+              completed_tokens << Nodes::Not.new
             else
               current_letters << letter
               if letter == '"'
