@@ -1,7 +1,7 @@
 # MtgSearchParser
 
 A parser for search strings for finding Magic the Gathering cards. Inspired by
-[magiccards.info].
+[magiccards.info](http://magiccards.info).
 
 ## Syntax I want to support
 
