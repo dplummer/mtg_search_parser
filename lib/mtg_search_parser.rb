@@ -32,3 +32,18 @@ require "mtg_search_parser/parsed/quality"
 require "mtg_search_parser/parser"
 require "mtg_search_parser/lexer"
 
+
+module MtgSearchParser
+  def self.parse(string)
+    parser = MtgSearchParser::Parser.new
+
+    tokens = Lexer.new.lex(string)
+    tokens.map do |token|
+      if token.is_a?(MtgSearchParser::Nodes::Query)
+        parser.parse(token.contents)
+      else
+        token
+      end
+    end
+  end
+end
