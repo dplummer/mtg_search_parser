@@ -35,8 +35,27 @@ describe MtgSearchParser do
     it "not" do
       expect(MtgSearchParser.parse("NOT t:angel -t:demon")).
         to eq([
-          MtgSearchParser::NotGroup.new(MtgSearchParser::Parsed::CardType.new("angel")),
-          MtgSearchParser::NotGroup.new(MtgSearchParser::Parsed::CardType.new("demon"))
+          MtgSearchParser::NotGroup.new(
+            [MtgSearchParser::Parsed::CardType.new("angel")]),
+          MtgSearchParser::NotGroup.new(
+            [MtgSearchParser::Parsed::CardType.new("demon")])
+        ])
+    end
+
+    it "parenthesis" do
+      expect(MtgSearchParser.parse("t:demon NOT (t:legendary t:artifact)")).
+        to eq([
+          MtgSearchParser::Parsed::CardType.new("demon"),
+          MtgSearchParser::NotGroup.new([MtgSearchParser::Parsed::CardType.new("legendary"),
+                                         MtgSearchParser::Parsed::CardType.new("artifact")]),
+        ])
+    end
+
+    it "strips unneccessary parenthesis" do
+      expect(MtgSearchParser.parse("(((t:legendary t:artifact)))")).
+        to eq([
+          MtgSearchParser::Parsed::CardType.new("legendary"),
+          MtgSearchParser::Parsed::CardType.new("artifact")
         ])
     end
   end
